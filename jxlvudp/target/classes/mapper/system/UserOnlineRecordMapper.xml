@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.UserOnlineRecordMapper">
+  <resultMap id="BaseResultMap" type="kesun.entity.system.UserOnlineRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="ipAddress" jdbcType="VARCHAR" property="ipAddress" />
+    <result column="loginDate" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="logoutDate" jdbcType="TIMESTAMP" property="logoutDate" />
+    <result column="sessionID" jdbcType="VARCHAR" property="sessionID" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <association property="loginUser" javaType="kesun.entity.system.User">
+      <id column="loginUser"  property="id" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name,createDate, status,ipAddress,loginDate,logoutDate,sessionID,type,loginUser,userName,userNickName
+  </sql>
+
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from userOnlineRecord where name like '%${name}%'
+  </select>
+  <select id="selectForObject" parameterType="java.util.Map"  resultMap="BaseResultMap">
+    select *
+    from vwUserOnlineRecord
+    where
+    <if test="loginUser!=null and loginUser!=''">
+      id=#{loginUser} and
+    </if>
+    <if test="session!=null">
+      sessionID=#{sessionID} and
+    </if>
+    (userName like '%${name}%' or  loginUser like '%${number}%')  order by  userName ASC
+  </select>
+  <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwUserOnlineRecord where userName like '%${name}%'  or loginUser like '%${number}%' order by name ASC
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}</if>
+  </select>
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwUserOnlineRecord
+    where
+    <if test="id!=null and id!=''">
+      id=#{id} and
+    </if>
+    <if test="session!=null">
+      sessionID=#{sessionID} and
+    </if>
+    userName like '%${name}%'  or loginUser like '%${number}%' order by name ASC
+
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from vwUserOnlineRecord
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from vwUserOnlineRecord
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from vwUserOnlineRecord where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <insert id="insert" parameterType="kesun.entity.system.UserOnlineRecord">
+    insert into userOnlineRecord (id,name,ipAddress,loginUser,loginDate,sessionID,type, createDate,status)
+    values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{ipAddress,jdbcType=VARCHAR},#{loginUser.id,jdbcType=VARCHAR},#{loginDate,jdbcType=TIMESTAMP},
+    #{sessionID,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="kesun.entity.system.UserOnlineRecord">
+    update userOnlineRecord
+    <set>
+      <if test="logoutDate != null">
+        logoutDate = #{logoutDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.system.UserOnlineRecord">
+    update userOnlineRecord
+    <set>
+      <if test="logoutDate != null">
+        logoutDate = #{logoutDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

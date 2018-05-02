@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.DnewsMapper">
+    <resultMap id="ImageNewsResultMap" type="kesun.entity.web.ImageNews">
+        <id column="id" property="id"/>
+        <result column="name" property="name" />
+        <result column="name" property="title" />
+        <result column="imageAddress" property="imageAddress" />
+        <result column="description" property="description" />
+        <result column="serial" property="serial" />
+    </resultMap>
+    <resultMap id="BaseResultMap" type="kesun.entity.web.News">
+        <id column="id"  property="id" />
+        <result column="name" property="name" />
+        <result column="createDate" property="createDate" />
+        <result column="status" property="status" />
+        <result column="content" property="content" typeHandler="kesun.util.ConvertBlobTypeHandler"/>
+        <result column="sendDate" property="sendDate" />
+        <result column="type" property="type" />
+        <result column="videoAddress" property="videoAddress" />
+        <result column="isShare" property="isShare" javaType="java.lang.Boolean" />
+        <association property="web" javaType="kesun.entity.web.WebSite">
+            <id column="web"  property="id" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <result column="webName" property="name" />
+        </association>
+        <association property="newsBlock" javaType="kesun.entity.web.NewsCategory">
+            <id column="newsBlock" property="id"></id>
+            <result column="cateName" property="name" />
+        </association>
+        <collection property="images" column="id" select="selectImageNews">
+
+        </collection>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, createDate,sendDate,newsBlock,type,videoAddress,isShare,status,web,webName,cateName,userID,actorID,orgID
+    </sql>
+    <select id="selectImageNews" parameterType="java.util.Map"  resultMap="ImageNewsResultMap">
+        select id,name,status,imageAddress,description,serial
+        from imageNews
+        where  NewsID=#{id} order by serial ASC
+    </select>
+    <select id="queryImageNewsByUserID" parameterType="java.util.HashMap" resultType="kesun.entity.web.ImageNews">
+        SELECT id,name,status,imageAddress,description,serial
+        from imagenews
+        where NewsID = #{id}
+    </select>
+
+    <select id="findByPage" parameterType="java.util.Map" resultType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from vwnews where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                (id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%') or
+            </if>
+            <if test="status=='正常' or status=='关闭'">
+                status= '${status}' or
+            </if>
+        </trim>
+        order by id ASC
+        <if test="start !=0 or limit!=0">
+            limit ${start},${limit}
+        </if>
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from vwNews_Ext
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectForObject" parameterType="java.util.Map"  resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from vwnews where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%' or
+            </if>
+        </trim>
+        order by name ASC
+    </select>
+
+    <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(1) as total from vwnews
+        where
+        <trim  suffixOverrides="and">
+            <if test="id!=null">
+                (id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%') and
+            </if>
+            <if test="status=='正常' or status=='关闭'">
+                status= '${status}'
+            </if>
+        </trim>
+    </select>
+
+    <!--判断数据是否在使用中-->
+    <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+        select id from imagenews where id=#{id,jdbcType=VARCHAR}<!--这样写是迫不得已，千万不要修改，修改之后可能有bug-->
+    </select>
+
+    <insert id="insert" parameterType="kesun.entity.web.News">
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, name, createDate,content,sendDate,web,newsBlock,videoAddress,type,status,isShare,userID
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+            #{createDate,jdbcType=TIMESTAMP},#{content},
+            #{sendDate,jdbcType=TIMESTAMP},#{web.id,jdbcType=VARCHAR},
+            #{newsBlock.id,jdbcType=VARCHAR},
+            #{videoAddress,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            #{isShare,jdbcType=BIT},
+            #{user.id,jdbcType=VARCHAR},
+        </trim>;
+        <if test="images!=null and images.size>0">
+            <foreach collection="images" item="item" index="index">
+                insert into imageNews
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    id,name,imageAddress,description,serial,status,NewsID,
+                </trim>
+                <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    #{item.id,jdbcType=VARCHAR},#{item.title,jdbcType=VARCHAR},
+                    #{item.imageAddress,jdbcType=VARCHAR},
+                    #{item.description,jdbcType=VARCHAR},
+                    #{item.serial},
+                    #{item.status,jdbcType=VARCHAR},
+                    #{id,jdbcType=VARCHAR},
+                </trim>;
+            </foreach>
+        </if>
+    </insert>
+
+
+    <!--修改	新闻子父网站同时显示-->
+    <update id="updaIsShare" parameterType="kesun.entity.web.News">
+        update news set
+        <if test="isShare != null">
+            isShare=#{isShare,jdbcType=BIT}
+        </if>
+        where id=#{id,jdbcType=VARCHAR}
+    </update>
+
+    <!--修改新闻显示状态-->
+    <update id="updateStatus" parameterType="java.util.Map">
+        update news set
+            status=#{status,jdbcType=VARCHAR},
+            sendDate=#{sendDate,jdbcType=TIMESTAMP}
+        where id in
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </update>
+
+    <!-- 修改数据-->
+    <update id="updateByPrimaryKey" parameterType="kesun.entity.web.News">
+        delete from news where id=#{id,jdbcType=VARCHAR};
+        insert into news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, name, createDate,content,sendDate,web,newsBlock,videoAddress,type,status,isShare,userID
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+            #{createDate,jdbcType=TIMESTAMP},#{content},
+            #{sendDate,jdbcType=TIMESTAMP},#{web.id,jdbcType=VARCHAR},
+            #{newsBlock.id,jdbcType=VARCHAR},
+            #{videoAddress,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{status,jdbcType=VARCHAR},
+            #{isShare,jdbcType=BIT},
+            #{user.id,jdbcType=VARCHAR},
+        </trim>;
+        <if test="images!=null and images.size>0">
+            delete from imagenews where NewsID=#{id,jdbcType=VARCHAR};
+            <foreach collection="images" item="item" index="index">
+                insert into imageNews
+                <trim prefix="(" suffix=")" suffixOverrides=",">
+                    id,name,imageAddress,description,serial,status,NewsID,
+                </trim>
+                <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    #{item.id,jdbcType=VARCHAR},#{item.title,jdbcType=VARCHAR},
+                    #{item.imageAddress,jdbcType=VARCHAR},
+                    #{item.description,jdbcType=VARCHAR},
+                    #{item.serial},
+                    #{item.status,jdbcType=VARCHAR},
+                    #{id,jdbcType=VARCHAR},
+                </trim>;
+            </foreach>
+        </if>
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from news where id=#{id,jdbcType=VARCHAR};
+        delete from imagenews where NewsID=#{id,jdbcType=VARCHAR};
+    </delete>
+
+    <!--删除图片-->
+    <delete id="delImage" parameterType="java.lang.String">
+        delete from imagenews
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

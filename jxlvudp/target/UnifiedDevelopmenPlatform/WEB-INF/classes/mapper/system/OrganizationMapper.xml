@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.OrganizationMapper">
+    <resultMap id="BaseResultMap" type="kesun.entity.system.Organization">
+        <id column="id"  property="id" />
+        <result column="name" property="name" />
+        <result column="name" property="text" />
+        <result column="createDate" property="createDate" />
+        <result column="charger" property="charger"/>
+        <result column="type" property="type" />
+        <result column="phone" property="phone" />
+        <result column="url" property="url" />
+        <result column="address" property="address" />
+        <result column="postcode" property="postCode" />
+        <result column="description" property="description" />
+        <result column="status" property="status" />
+        <association property="parent" column="parent" select="selectByPrimaryKey" javaType="kesun.entity.system.Organization">
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, createDate, charger,type,phone,url,address,postcode,description,status,parent
+    </sql>
+
+    <insert id="insert" parameterType="kesun.entity.system.Organization">
+        insert into Organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, name, createDate,charger,type,phone,url,address,postcode,description,status,
+            <if test="parent != null">
+                parent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+            #{charger,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},
+            #{url,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{postCode,jdbcType=VARCHAR},
+            #{description,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+            <if test="parent != null">
+                #{parent.id,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="kesun.entity.system.Organization">
+        update Organization
+        set
+        <trim suffixOverrides=",">
+            id=#{id,jdbcType=VARCHAR},name = #{name,jdbcType=VARCHAR},
+            createDate=#{createDate,jdbcType=TIMESTAMP},
+            charger=#{charger,jdbcType=VARCHAR},type=#{type,jdbcType=VARCHAR},phone=#{phone,jdbcType=VARCHAR},
+            url=#{url,jdbcType=VARCHAR},address=#{address,jdbcType=VARCHAR},postCode=#{postCode,jdbcType=VARCHAR},
+            description=#{description,jdbcType=VARCHAR}, status=#{status,jdbcType=VARCHAR},
+            <if test="parent!=null">
+                parent=#{parent.id,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        where id = #{oldId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateParent" parameterType="kesun.entity.system.Organization">
+        update Organization
+        set parent=#{parent.id,jdbcType=VARCHAR}
+        where id = #{Id,jdbcType=VARCHAR}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from Organization
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from Organization
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectForObject" parameterType="java.util.Map"  resultMap="BaseResultMap">
+        select *
+        from Organization
+        <where>
+            <if test='parent!=null and parent!="" and parent!="0"'>
+            parent=#{parent,jdbcType=VARCHAR} AND
+            </if>
+            name like '%${name}%'  order by name ASC
+        </where>
+    </select>
+    <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from Organization
+        <where>
+            <if test='parent!=null and parent!="" and parent!="0"'>
+                parent=#{parent,jdbcType=VARCHAR} AND
+            </if>
+           name like '%${name}%'  order by name ASC
+        </where>
+
+    </select>
+    <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from Organization where name like '%${name}%'  order by name ASC
+        <if test="start !=0 or limit!=0">
+            limit #{start},#{limit}</if>
+    </select>
+    <!--判断数据是否在使用中-->
+    <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+        select id from Organization where parent=#{id,jdbcType=VARCHAR}
+    </select>
+</mapper>

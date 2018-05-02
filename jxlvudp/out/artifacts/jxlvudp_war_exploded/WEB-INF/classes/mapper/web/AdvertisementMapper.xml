@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.AdvertisementMapper">
+  <resultMap id="BaseResultMap" type="kesun.entity.web.Advertisement">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="imgAddress" jdbcType="VARCHAR" property="imgAddress" />
+    <result column="videoAddress" jdbcType="VARCHAR" property="videoAddress" />
+    <result column="linkUrl" jdbcType="VARCHAR" property="linkUrl" />
+    <result column="homeUrl" jdbcType="VARCHAR" property="homeUrl" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="posX" jdbcType="INTEGER" property="posX" />
+    <result column="posY" jdbcType="INTEGER" property="posY" />
+    <result column="width" jdbcType="INTEGER" property="width" />
+    <result column="height" jdbcType="INTEGER" property="height" />
+    <result column="duration" jdbcType="INTEGER" property="duration" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <association property="web" javaType="kesun.entity.web.WebSite">
+      <id column="web" property="id"></id>
+      <result column="websiteName" property="name" />
+    </association>
+    <association  property="user" javaType="kesun.entity.system.User">
+      <id property="id" column="userID"/>
+      <result property="name" column="userName"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name,imgAddress,videoAddress,linkUrl, homeUrl,type,posX,posY,width,height,duration,web,webSiteName,userID,userName,createDate,status
+  </sql>
+
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from vwAdvertisement where name like '%${name}%'
+  </select>
+
+  <select id="selectForObject" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwAdvertisement where name like '%${name}%'  order by name ASC
+  </select>
+
+  <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwAdvertisement where id like '%${id}%' or name like '%${name}%'  order by name ASC
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}</if>
+  </select>
+
+  <select id="findByPage_oracle" parameterType="java.util.Map"  resultType="java.util.Map">
+
+  </select>
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwAdvertisement where name like '%${name}%' order by name ASC
+
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,content
+    from vwAdvertisement
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!--判断数据是否在使用中-->
+  <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+    select id from advertisement where status='正常' and id=#{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from Advertisement
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from Advertisement where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <insert id="insert" parameterType="kesun.entity.web.Advertisement">
+    insert into Advertisement (id, name,imgAddress,videoAddress,linkUrl, homeUrl,content,type,posX,posY,width,height,duration,web,userID,createDate,status)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{imgAddress,jdbcType=VARCHAR},
+    #{videoAddress,jdbcType=VARCHAR},#{linkUrl,jdbcType=VARCHAR},#{homeUrl,jdbcType=VARCHAR},
+    #{content,jdbcType=BLOB},#{type,jdbcType=VARCHAR},#{posX,jdbcType=INTEGER},#{posY,jdbcType=INTEGER},
+    #{width,jdbcType=INTEGER},#{height,jdbcType=INTEGER},#{duration,jdbcType=INTEGER},#{web.id,jdbcType=VARCHAR},#{user.id,jdbcType=VARCHAR},
+     #{createDate,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="batchInsert" parameterType="kesun.entity.web.Advertisement">
+
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="kesun.entity.web.Advertisement">
+    update Advertisement
+    <set>
+      <if test="name !=''">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="imgAddress !=''">
+        imgAddress = #{imgAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="videoAddress !=''">
+        videoAddress = #{videoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl !=''">
+        linkUrl = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="homeUrl !=''">
+        homeUrl = #{homeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content !=''">
+        content = #{content,jdbcType=BLOB},
+      </if>
+      <if test="type !=''">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="posX !=0">
+        posX = #{posX,jdbcType=INTEGER},
+      </if>
+      <if test="posY !=0">
+        posY = #{posY,jdbcType=INTEGER},
+      </if>
+      <if test="width !=0">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height !=0">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="duration !=0">
+        duration = #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="web != null">
+        web = #{web.id,jdbcType=VARCHAR},
+      </if>
+      <if test="user!= null">
+        userID = #{user.id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status !=''">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.web.Advertisement">
+    update Advertisement
+    <set>
+      <if test="name !=''">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="imgAddress !=''">
+        imgAddress = #{imgAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="videoAddress !=''">
+        videoAddress = #{videoAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="linkUrl !=''">
+        linkUrl = #{linkUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="homeUrl !=''">
+        homeUrl = #{homeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content !=''">
+        content = #{content,jdbcType=BLOB},
+      </if>
+      <if test="type !=''">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="posX !=0">
+        posX = #{posX,jdbcType=INTEGER},
+      </if>
+      <if test="posY !=0">
+        posY = #{posY,jdbcType=INTEGER},
+      </if>
+      <if test="width !=0">
+        width = #{width,jdbcType=INTEGER},
+      </if>
+      <if test="height !=0">
+        height = #{height,jdbcType=INTEGER},
+      </if>
+      <if test="duration !=0">
+        duration = #{duration,jdbcType=INTEGER},
+      </if>
+      <if test="web != null">
+        web = #{web.id,jdbcType=VARCHAR},
+      </if>
+      <if test="user!= null">
+        userID = #{user.id,jdbcType=VARCHAR},
+      </if>
+
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status !=''">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateStateByPrimaryKey" parameterType="kesun.entity.web.Advertisement">
+    update Advertisement
+    <set>
+        status = #{status,jdbcType=VARCHAR}
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

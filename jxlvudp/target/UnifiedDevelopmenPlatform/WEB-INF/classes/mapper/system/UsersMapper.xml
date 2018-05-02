@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.UsersMapper">
+  <resultMap id="BaseResultMap" type="kesun.entity.system.User">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="nickName" jdbcType="VARCHAR" property="nickName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <association property="org" javaType="kesun.entity.system.Organization">
+      <id column="org"  property="id" />
+    </association>
+    <collection property="actors" ofType="kesun.entity.system.Actor" column="{userID=id}" select="queryActorByUserID">
+      <result column="id" jdbcType="VARCHAR" property="id"></result>
+      <result column="name" jdbcType="VARCHAR" property="name" />
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name,nickName,createDate, status,number,password,type,org
+  </sql>
+  <select id="queryActorByUserID" parameterType="java.util.HashMap" resultType="kesun.entity.system.Actor">
+    SELECT *
+    FROM vwUserMapActor
+    Where userID=#{userID}
+  </select>
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from users where name like '%${name}%' or number like '%${number}%'
+  </select>
+  <select id="selectForObject" parameterType="java.util.Map"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from users
+     where name like '%${name}%' or number like '%${number}%'  order by name ASC
+  </select>
+  <select id="findByPage" parameterType="java.util.Map"  resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from users where name like '%${name}%'  or number like '%${number}%' order by name ASC
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}</if>
+  </select>
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from users where name like '%${name}%'  or number like '%${number}%' order by name ASC
+
+  </select>
+
+  <select id="findActorAndOrg" parameterType="kesun.entity.system.User"  resultType="java.util.Map">
+    select *
+    from vwactor where id in (select actorid from usermapactor where userid=#{id,jdbcType=VARCHAR})
+
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from users
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from users where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <!--设置指定用户角色-->
+  <insert id="setActor" parameterType="java.util.Map">
+    insert into usermapactor (id,name,createDate,userID,actorID)
+    values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},#{userID,jdbcType=VARCHAR},#{actorID,jdbcType=VARCHAR})
+  </insert>
+  <!--删除指定用户所有角色-->
+  <delete id="delUserMapActor" parameterType="java.util.List">
+    DELETE from usermapactor where userID in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+  <insert id="insert" parameterType="kesun.entity.system.User">
+    insert into users (id, number,name,nickName, createDate,password,status,type,org)
+    values (#{id,jdbcType=VARCHAR},#{number,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},#{nickName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+       #{password,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{org.id,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="kesun.entity.system.User">
+    update users
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="org != null">
+        org = #{org.id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.system.User">
+    update users
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nickName = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="org != null">
+        org = #{org.id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!--密码修改-->
+  <update id="changePwd" parameterType="java.util.Map">
+    update users set password=#{password} where id=#{id}
+  </update>
+  <!--密码修改-->
+  <update id="changeState" parameterType="java.util.Map">
+    update users set status=#{status} where id=#{id}
+  </update>
+</mapper>

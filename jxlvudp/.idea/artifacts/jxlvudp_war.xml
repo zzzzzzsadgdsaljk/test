@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="jxlvudp:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="UnifiedDevelopmenPlatform.war">
+      <element id="artifact" artifact-name="jxlvudp:war exploded" />
+    </root>
+  </artifact>
+</component>

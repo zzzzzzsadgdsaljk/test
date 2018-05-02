@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.NoticeMapper">
+    <resultMap id="BaseResultMap" type="kesun.entity.web.Notice">
+        <id column="id"  property="id" />
+        <result column="name" property="name" />
+        <result column="createDate" property="createDate" />
+        <result column="content" property="content" typeHandler="kesun.util.ConvertBlobTypeHandler"/>
+        <result column="sendDate" property="sendDate" />
+
+        <result column="status" property="status" />
+        <association property="sender" javaType="kesun.entity.system.User">
+            <id column="userID"  property="id" />
+            <result property="name" column="userName"/>
+        </association>
+        <association property="web" javaType="kesun.entity.web.WebSite">
+            <id column="web"  property="id" />
+            <result column="webName" property="name" />
+        </association>
+        <association property="actor" javaType="kesun.entity.system.Actor">
+            <id column="actorID"  property="id" />
+        </association>
+        <association property="org" javaType="kesun.entity.system.Organization">
+            <id column="orgID"  property="id" />
+        </association>
+    </resultMap>
+    <insert id="insert" parameterType="kesun.entity.web.Notice">
+        insert into notice (id, name, createDate,
+        content,sendDate,status,userID,web,actorID,orgID)
+        values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+        #{content,jdbcType=VARCHAR},#{createDate,jdbcType=TIMESTAMP},#{status,jdbcType=VARCHAR},
+        #{user.id,jdbcType=VARCHAR},#{web.id,jdbcType=VARCHAR},#{actor.id,jdbcType=VARCHAR},#{org.id,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="kesun.entity.web.Notice">
+        update notice set
+        id=#{id,jdbcType=VARCHAR},name=#{name,jdbcType=VARCHAR},createDate=#{createDate,jdbcType=TIMESTAMP},
+        content=#{content,jdbcType=VARCHAR},sendDate=#{createDate,jdbcType=TIMESTAMP},status=#{status,jdbcType=VARCHAR},
+        web= #{web.id,jdbcType=VARCHAR}
+        where id=#{oldId,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        *
+        from notice
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectForObject" parameterType="java.util.Map"  resultType="java.util.Map">
+        select *
+        from notice where
+        where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%' or
+            </if>
+        </trim>
+        order by name ASC
+    </select>
+
+    <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(1) as total from notice
+        where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%' or
+            </if>
+        </trim>
+    </select>
+    <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+        select *
+        from vwnotice where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%' or
+            </if>
+        </trim>
+
+        order by name ASC
+        <if test="start !=0 or limit!=0">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <!--判断数据是否在使用中-->
+    <!--<select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">-->
+    <!--select id from website where id=#{id,jdbcType=VARCHAR}-->
+    <!--</select>-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from notice
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+
+</mapper>

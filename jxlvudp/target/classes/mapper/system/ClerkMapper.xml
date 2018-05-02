@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ClerkMapper">
+  <resultMap id="ClerkContactResultMap" type="kesun.entity.system.ClerkContact">
+    <id column="id" property="id"/>
+    <result column="name" property="name" />
+   <result column="value" property="value" />
+    <!--<result column="clerkID" property="clerk" />-->
+    <!--<result column="studentID" property="studentID" />-->
+
+  </resultMap>
+  <resultMap id="BaseResultMap" type="kesun.entity.system.Clerk">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="xm" jdbcType="VARCHAR" property="name" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="xm" jdbcType="VARCHAR" property="xm" />
+    <result column="gh" jdbcType="VARCHAR" property="gh" />
+    <result column="ywxm" jdbcType="VARCHAR" property="ywxm" />
+    <result column="xmpy" jdbcType="VARCHAR" property="xmpy" />
+    <result column="cym" jdbcType="VARCHAR" property="cym" />
+    <result column="xbm" jdbcType="VARCHAR" property="xbm" />
+    <result column="csrq" jdbcType="TIMESTAMP" property="csrq" />
+    <result column="csdm" jdbcType="VARCHAR" property="csdm" />
+    <result column="jg" jdbcType="VARCHAR" property="jg" />
+    <result column="mzm" jdbcType="VARCHAR" property="mzm" />
+    <result column="gjdqm" jdbcType="VARCHAR" property="gjdqm" />
+    <result column="sfzjlxm" jdbcType="VARCHAR" property="sfzjlxm" />
+    <result column="sfzjh" jdbcType="VARCHAR" property="sfzjh" />
+    <result column="hyzkm" jdbcType="VARCHAR" property="hyzkm" />
+    <result column="zzmmm" jdbcType="VARCHAR" property="zzmmm" />
+    <result column="jkzkm" jdbcType="VARCHAR" property="jkzkm" />
+    <result column="xyzjm" jdbcType="VARCHAR" property="xyzjm" />
+    <result column="xxm" jdbcType="VARCHAR" property="xxm" />
+    <result column="zp" jdbcType="VARCHAR" property="zp" />
+    <result column="sfzjyxq" jdbcType="VARCHAR" property="sfzjyxq" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <association property="user" javaType="kesun.entity.system.User">
+      <id column="userID"  property="id" />
+    </association>
+    <association property="org" javaType="kesun.entity.system.Organization">
+      <id column="orgID"  property="id" />
+      <result column="orgName" property="name"/>
+    </association>
+    <association property="actor" javaType="kesun.entity.system.Actor">
+      <id column="actorID"  property="id" />
+    </association>
+    <collection property="contacts" column="id" select="selectClerkContact">
+
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, gh,xm,ywxm,xmpy,cym,xbm,csrq,csdm,orgName,jg,mzm,gjdqm,sfzjlxm,sfzjh,hyzkm,zzmmm,jkzkm,xyzjm,xxm,zp,createDate,sfzjyxq, status,userID,orgID,actorID
+  </sql>
+
+
+  <select id="selectClerkContact" parameterType="java.util.Map"  resultMap="ClerkContactResultMap">
+    select *
+    from clerkcontact
+    where  clerkID=#{id}
+  </select>
+
+
+
+
+
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from vwclerk
+    <trim prefix="where"  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="gh!=null">
+        gh like '%${gh}%' or
+      </if>
+      <if test="sfzjh!=null">
+        sfzjh like '%${sfzjh}%' or
+      </if>
+      <if test="name!=null">
+        xm like '%${name}%' or
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectForObject" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from  vwclerk
+    <trim prefix="where"  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="gh!=null">
+        gh like '%${gh}%' or
+      </if>
+      <if test="sfzjh!=null">
+        sfzjh like '%${sfzjh}%' or
+      </if>
+      <if test="name!=null">
+        xm like '%${name}%' or
+      </if>
+    </trim>
+    order by xm ASC
+  </select>
+
+  <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from  vwclerk
+    <trim prefix="where"  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="gh!=null">
+        gh like '%${gh}%' or
+      </if>
+      <if test="sfzjh!=null">
+        sfzjh like '%${sfzjh}%' or
+      </if>
+      <if test="name!=null">
+        xm like '%${name}%' or
+      </if>
+    </trim>
+      order by xm ASC
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}
+    </if>
+  </select>
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwclerk
+    <trim prefix="where"  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="gh!=null">
+        gh like '%${gh}%' or
+      </if>
+      <if test="sfzjh!=null">
+        sfzjh like '%${sfzjh}%' or
+      </if>
+      <if test="name!=null">
+        xm like '%${name}%' or
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from vwclerk
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+   <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+    select *
+    from clerkMapUser
+    where clerkID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from clerk
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from clerk where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+    delete from clerkcontact where clerkID=#{id,jdbcType=VARCHAR};
+  </delete>
+
+  <insert id="insert" parameterType="kesun.entity.system.Clerk">
+      insert into clerk
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      id, gh,xm,ywxm,xmpy,cym,xbm,csrq,csdm,jg,mzm,gjdqm,sfzjlxm,sfzjh,hyzkm,zzmmm,jkzkm,xyzjm,xxm,zp,createDate,sfzjyxq, status,userID,orgID,actorID
+    </trim>
+
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=VARCHAR},
+      #{gh,jdbcType=VARCHAR},
+      #{xm,jdbcType=VARCHAR},
+      #{ywxm,jdbcType=VARCHAR},
+      #{xmpy,jdbcType=VARCHAR},
+      #{cym,jdbcType=VARCHAR},
+      #{xbm,jdbcType=VARCHAR},
+      #{csrq,jdbcType=TIMESTAMP},
+      #{csdm,jdbcType=VARCHAR},
+      #{jg,jdbcType=VARCHAR},
+      #{mzm,jdbcType=VARCHAR},
+      #{gjdqm,jdbcType=VARCHAR},
+      #{sfzjlxm,jdbcType=VARCHAR},
+      #{sfzjh,jdbcType=VARCHAR},
+      #{hyzkm,jdbcType=VARCHAR},
+      #{zzmmm,jdbcType=VARCHAR},
+      #{jkzkm,jdbcType=VARCHAR},
+      #{xyzjm,jdbcType=VARCHAR},
+      #{xxm,jdbcType=VARCHAR},
+      #{zp,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP},
+      #{sfzjyxq,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR},
+      #{user.id,jdbcType=VARCHAR},
+      #{org.id,jdbcType=VARCHAR},
+      #{actor.id,jdbcType=VARCHAR},
+    </trim>;
+
+    <if test="contacts!=null and contacts.size>0">
+      <foreach collection="contacts" item="item" index="index">
+        insert into clerkcontact
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          id,name,value,clerkID,studentID,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          #{item.id,jdbcType=VARCHAR},
+          #{item.name,jdbcType=VARCHAR},
+          #{item.value,jdbcType=VARCHAR},
+          #{item.clerkID,jdbcType=VARCHAR},
+          #{item.studentID,jdbcType=VARCHAR},
+
+        </trim>;
+      </foreach>
+    </if>
+
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.system.Clerk">
+    update clerk
+    set
+       id=#{id,jdbcType=VARCHAR}, gh=#{gh,jdbcType=VARCHAR},xm=#{xm,jdbcType=VARCHAR},
+       ywxm=#{ywxm,jdbcType=VARCHAR},xmpy=#{xmpy,jdbcType=VARCHAR},cym=#{cym,jdbcType=VARCHAR},xbm=#{xbm,jdbcType=VARCHAR},
+       csrq=#{csrq,jdbcType=TIMESTAMP},csdm=#{csdm,jdbcType=VARCHAR},jg=#{jg,jdbcType=VARCHAR},mzm=#{mzm,jdbcType=VARCHAR},gjdqm=#{gjdqm,jdbcType=VARCHAR},
+       sfzjlxm=#{sfzjlxm,jdbcType=VARCHAR},sfzjh=#{sfzjh,jdbcType=VARCHAR},hyzkm=#{hyzkm,jdbcType=VARCHAR},zzmmm=#{zzmmm,jdbcType=VARCHAR},jkzkm=#{jkzkm,jdbcType=VARCHAR},
+       xyzjm=#{xyzjm,jdbcType=VARCHAR},xxm=#{xxm,jdbcType=VARCHAR},
+       zp=#{zp,jdbcType=VARCHAR},createDate=#{createDate,jdbcType=TIMESTAMP},sfzjyxq=#{sfzjyxq,jdbcType=TIMESTAMP}, status=#{status,jdbcType=VARCHAR},
+       userID=#{user.id,jdbcType=VARCHAR},
+       orgID=#{org.id,jdbcType=VARCHAR},actorID=#{actor.id,jdbcType=VARCHAR}
+    where id = #{oldId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

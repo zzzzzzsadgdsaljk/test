@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.LeaveMessageMapper">
+  <resultMap id="BaseResultMap" type="kesun.entity.web.LeaveMessage">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="leaveDate" jdbcType="TIMESTAMP" property="leaveDate" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="response" jdbcType="VARCHAR" property="response" />
+    <result column="responseDate" jdbcType="TIMESTAMP" property="responseDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <association property="worker" jdbcType="VARCHAR" javaType="kesun.entity.system.User">
+      <id column="worker" property="id"></id>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, createDate,content,leaveDate,response,responseDate, status
+  </sql>
+
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from leaveMessage where name like '%${name}%'
+  </select>
+
+  <select id="selectForObject" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from leaveMessage where name like '%${name}%'  order by leaveDate desc
+  </select>
+
+  <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from leaveMessage where name like '%${name}%'  order by leaveDate desc
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}</if>
+  </select>
+
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from leaveMessage where name like '%${name}%' order by leaveDate desc
+
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from leaveMessage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from leaveMessage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from leaveMessage where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <insert id="insert" parameterType="kesun.entity.web.LeaveMessage">
+    insert into leaveMessage (id, name, createDate,leaveDate,content,status)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+       #{leaveDate,jdbcType=TIMESTAMP},#{content,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="batchInsert" parameterType="kesun.entity.web.LeaveMessage">
+    insert into leaveMessage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="createDate != null">
+        createDate,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="owner != null">
+        owner,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null">
+        #{owner,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="kesun.entity.web.LeaveMessage">
+    update leaveMessage
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveDate != null">
+        leaveDate = #{leaveDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="response != null">
+        response = #{response,jdbcType=VARCHAR},
+      </if>
+      <if test="responseDate != null">
+        responseDate = #{responseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="worker != null">
+        worker = #{worker.id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.web.LeaveMessage">
+    update leaveMessage
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="leaveDate != null">
+        leaveDate = #{leaveDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="response != null">
+        response = #{response,jdbcType=VARCHAR},
+      </if>
+      <if test="responseDate != null">
+        responseDate = #{responseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="worker != null">
+        worker = #{worker.id,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

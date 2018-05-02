@@ -1,0 +1,144 @@
+/*main.html内容区域首页的css样式*/
+/*main.html内容区域首页的css样式*/
+/*main.html内容区域首页的css样式*/
+/*main.html内容区域首页的css样式*/
+/*main.html内容区域首页的css样式*/
+*{
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	outline: none;
+	border: none;
+	list-style: none;
+	font-weight: normal;
+	font-family: "微软雅黑";
+	font-size: 12px;
+	color: #333;
+}
+/*首页*/
+/*大框*/
+#ht_main{
+	width: 1000px;
+	height: 450px;
+	margin: 0 0 16px 20px;
+	overflow: hidden;
+}
+/*左边大块*/
+.main_left{
+	float: left;
+	width: 480px;
+	height: 100%;
+	overflow: hidden;
+}
+.main_top,.main_bottom{
+	width: 480px;
+	height: 220px;
+	border-radius: 4px;
+	background-color: #fff;
+	overflow: hidden;
+}
+.main_bottom{
+	margin-top: 10px;
+}
+.main_top h1,.main_bottom h1{
+	height: 48px;
+	line-height: 50px;
+	padding-left: 50px;
+	font-size: 16px;
+	font-weight: bold;
+	border-bottom: 2px #f2f2f2 solid;
+	color: #118912;
+}
+.main_top h1{
+	background: url(../images/mid_tongzhil.png) no-repeat;
+	background-position: 20px center;
+	background-size: auto 18px;
+}
+.main_bottom h1{
+	background: url(../images/mid_liuliangl.png) no-repeat;
+	background-position: 20px center;
+	background-size: auto 18px;
+}
+.main_top_cn{
+	width: 460px;
+	height: 160px;
+	margin: 5px 10px;
+}
+.main_bottom_cn img{
+	width: 100%;
+}
+.main_top_cn p{
+	background: url(../images/main_tzicon.png) no-repeat;
+	background-position: 10px center;
+	background-size: auto 12px;
+	width: 420px;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 10px 0 30px;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.main_top_cn p a{
+	font-size: 14px;
+}
+.main_top_cn a:hover{
+	color: #118912;
+}
+
+/*右边两个块*/
+.main_mid,.main_right{
+	float: left;
+	width: 240px;
+	height: 100%;
+	margin-left: 20px;
+	border-radius: 4px;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+.main_mid_cn{
+	height: 430px;
+	overflow: hidden;
+}
+.main_mid_cn p{
+	line-height: 20px;
+	height: 40px;
+	overflow: hidden;
+	display: block;
+	width: 200px;
+	padding: 12px 0;
+	margin: 0 20px;
+	border-bottom: 1px #f2f2f2 solid;
+}
+.main_mid_cn p a{
+	font-size: 14px;
+	color: #1a1a1a;
+}
+.main_mid_cn a:hover{
+	color: #118912;
+}
+.main_mid h1{
+	height: 48px;
+	background: url(../images/mid_gonggaol.png) no-repeat;
+	background-position: 20px center;
+	background-size: auto 18px;
+	line-height: 50px;
+	padding-left: 50px;
+	font-size: 16px;
+	font-weight: bold;
+	border-bottom: 2px #f2f2f2 solid;
+	color: #118912;
+}
+.main_right h1{
+	height: 48px;
+	background: url(../images/mid_xinwenl.png) no-repeat;
+	background-position: 20px center;
+	background-size: auto 15px;
+	line-height: 50px;
+	padding-left: 50px;
+	font-size: 16px;
+	font-weight: bold;
+	border-bottom: 2px #f2f2f2 solid;
+	color: #118912;
+}
+/*首页*/

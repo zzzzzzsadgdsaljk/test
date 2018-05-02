@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.NewsCategoryMapper">
+    <resultMap id="BaseResultMap" type="kesun.entity.web.NewsCategory">
+        <id column="id"  property="id" />
+        <result column="name" property="name" />
+        <result column="createDate" property="createDate" />
+        <result column="description" property="description"></result>
+        <result column="status" property="status" />
+        <association property="web" javaType="kesun.entity.web.WebSite">
+            <id column="web"  property="id" />
+            <result column="webName" property="name" />
+        </association>
+        <association property="user" javaType="kesun.entity.system.User">
+            <id column="userID"  property="id" />
+        </association>
+        <association property="org" javaType="kesun.entity.system.Organization">
+            <id column="orgID"  property="id" />
+        </association>
+        <association property="actor" javaType="kesun.entity.system.Actor">
+            <id column="actorID"  property="id" />
+        </association>
+        <association property="parent" column="parent" select="selectByPrimaryKey" javaType="kesun.entity.web.NewsCategory">
+
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, createDate,web,webName,description, status,userID,actorID,orgID,parent
+    </sql>
+
+
+
+    <insert id="insert" parameterType="kesun.entity.web.NewsCategory">
+        insert into NewsCategory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            id, name, createDate,
+            status,web,description,userID,actorID,orgID,
+            <if test="parent != null">
+                parent,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+            #{status,jdbcType=VARCHAR},#{web.id,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},
+            #{user.id,jdbcType=VARCHAR},
+            #{actor.id,jdbcType=VARCHAR},#{org.id,jdbcType=VARCHAR},
+            <if test="parent != null">
+                #{parent.id,jdbcType=VARCHAR},
+            </if>
+        </trim>
+
+
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="kesun.entity.web.NewsCategory">
+        update NewsCategory set
+        <trim suffixOverrides=",">
+        id=#{id,jdbcType=VARCHAR}, name=#{name,jdbcType=VARCHAR}, createDate=#{createDate,jdbcType=TIMESTAMP},
+        status=#{status,jdbcType=VARCHAR},web=#{web.id,jdbcType=VARCHAR},description=#{description,jdbcType=VARCHAR},
+            <if test="parent!=null">
+                parent=#{parent.id,jdbcType=VARCHAR},
+            </if>
+        </trim>
+        where id=#{oldId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateParent" parameterType="kesun.entity.web.NewsCategory">
+        update NewsCategory
+        set parent=#{parent.id,jdbcType=VARCHAR}
+        where id = #{Id,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from vwNewsCategory
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectForObject" parameterType="java.util.Map"  resultMap="BaseResultMap">
+       select *
+        from vwNewsCategory
+        <where>
+            <if test='parent!=null and parent!="" and parent!="0"'>
+                parent=#{parent,jdbcType=VARCHAR} AND
+            </if>
+            name like '%${name}%' or id like '%${id}%'  order by name ASC
+        </where>
+    </select>
+    <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from vwNewsCategory
+        <where>
+            <if test='parent!=null and parent!="" and parent!="0"'>
+                parent=#{parent,jdbcType=VARCHAR} AND
+            </if>
+            name like '%${name}%' or id like '%${id}%'   order by name ASC
+        </where>
+
+    </select>
+    <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+        select count(1) as total from vwNewsCategory where name like '%${name}%' or id like '%${id}%'
+    </select>
+    <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+        select <include refid="Base_Column_List" />
+        from vwNewsCategory where
+        <trim  suffixOverrides="or">
+            <if test="id!=null">
+                id like '%${id}%' or
+            </if>
+            <if test="name!=null">
+                name like '%${name}%' or
+            </if>
+        </trim>
+
+        order by name ASC
+        <if test="start !=0 or limit!=0">
+            limit #{start},#{limit}
+        </if>
+    </select>
+    <!--判断数据是否在使用中-->
+    <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+        select newsBlock from news where newsBlock=#{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from NewsCategory
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+</mapper>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper.ActorTypeMapper">
+  <resultMap id="BaseResultMap" type="kesun.entity.system.ActorType">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <association property="org" javaType="kesun.entity.system.Organization" >
+        <id column="org" property="id"></id>
+        <result column="orgName" property="name"></result>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, createDate, status,org,orgName,type
+  </sql>
+
+  <select id="getRowsCount" parameterType="java.util.Map"  resultType="java.lang.Integer">
+     select count(1) as total from vwactortype where
+    <trim  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="name!=null">
+        name like '%${name}%' or
+      </if>
+    </trim>
+  </select>
+
+  <select id="selectForObject" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwactortype where
+    <trim  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="name!=null">
+        name like '%${name}%' or
+      </if>
+    </trim>
+    order by name ASC
+  </select>
+
+  <select id="findByPage" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwactortype where
+    <trim  suffixOverrides="or">
+      <if test="id!=null">
+        id like '%${id}%' or
+      </if>
+      <if test="name!=null">
+        name like '%${name}%' or
+      </if>
+    </trim>
+
+      order by name ASC
+    <if test="start !=0 or limit!=0">
+      limit #{start},#{limit}
+    </if>
+  </select>
+
+  <select id="selectForMap" parameterType="java.util.Map"  resultType="java.util.Map">
+    select <include refid="Base_Column_List" />
+    from vwactortype where name like '%${name}%' order by name ASC
+
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from vwactortype
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+   <select id="findInUseById" parameterType="java.lang.String" resultType="java.util.Map">
+    select *
+    from actor
+    where type = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from actortype
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 批量删除 参数类型是List-->
+  <delete id="batchDelete" parameterType="java.util.List">
+    DELETE from actortype where id in(
+    <foreach collection="list" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </delete>
+
+  <insert id="insert" parameterType="kesun.entity.system.ActorType">
+      insert into actortype (id, name, createDate,
+      status, org,type) values (
+      #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR}, #{org.id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="batchInsert" parameterType="kesun.entity.system.ActorType">
+    insert into actortype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="createDate != null">
+        createDate,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="org != null">
+        org,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="org != null">
+        #{org.id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="kesun.entity.system.ActorType">
+    update actortype
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="org != null">
+        org = #{org.id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{oldId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="kesun.entity.system.ActorType">
+    update actortype
+    set
+      id=#{id,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      createDate = #{createDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      org = #{org.id,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR}
+    where id = #{oldId,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

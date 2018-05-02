@@ -1,0 +1,422 @@
+/*index.html首页的css样式*/
+/*index.html首页的css样式*/
+/*index.html首页的css样式*/
+/*index.html首页的css样式*/
+/*index.html首页的css样式*/
+*{
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+	outline: none;
+	border: none;
+	list-style: none;
+	font-weight: normal;
+	font-family: "微软雅黑";
+	font-size: 12px;
+	color: #333;
+}
+html,body{
+	height: 100%;
+	overflow: hidden;
+}
+/*左边大框*/
+.ht_left{
+	float: left;
+	width: 15%;
+	height: 100%;
+	overflow: hidden;
+	background: url(../images/nav_bg.jpg) no-repeat;
+	background-size: 100% 100%; 
+}
+/*左边导航*/
+.ht_left_nav{
+	width: 90%;
+	float: left;
+	padding-top: 80px;
+	background: url(../images/ht_logo.png) no-repeat;
+	background-size: auto 14px;
+	background-position: 10px 30px;
+}
+.nav_fl,.nav_gw,.nav_wj{
+	margin-bottom: 10px;
+}
+/*导航隐藏按钮*/
+.ht_left_hide{
+	width: 10%;
+	float: left;
+	margin-top: 18px;
+}
+.ht_left_hide:hover{
+	opacity: 0.6;
+}
+.nav_hide{
+	width: 100%;
+	height: 40px;
+	cursor: pointer;
+	background: url(../images/nav_hide.png) no-repeat;
+	background-position: center center;
+}
+.nav_show{
+	width: 100%;
+	height: 40px;
+	cursor: pointer;
+	background: url(../images/nav_show.png) no-repeat;
+	background-position: center center;
+}
+.li_bian{
+	width: 150px;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+}
+.li_bian:hover{
+	background-image: url(../images/li_bian.png);
+	background-repeat: no-repeat;
+	background-size: auto 14px;
+	background-position: 20px center;
+}
+.li_add{
+	background-image: url(../images/li_bian.png);
+	background-repeat: no-repeat;
+	background-size: auto 14px;
+	background-position: 20px center;
+	background-color: #118912;
+	color: #fff; 
+}
+/*辅助系统块*/
+.fl_show{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_fuzhu.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	position: relative;
+}
+.fl_hide{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_fuzhuu.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	background-color: #118912;
+	color: #fff;
+	position: relative; 
+}
+.fl_show:hover{
+	background-image: url(../images/bt_fuzhuu.png);
+}
+.xiala{
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	top: 0;
+	left: 70%;
+}
+.xiala_s{
+	background-image: url(../images/xiala_a.png);
+	background-repeat: no-repeat;
+	background-position: center; 
+}
+.xiala_h{
+	background-image: url(../images/xiala_c.png);
+	background-repeat: no-repeat;
+	background-position: center; 
+}
+.nav_top:hover .xiala_s{
+	background-image: url(../images/xiala_b.png);
+}
+
+.nav_fl li:hover{
+	background-color: #118912;
+	color: #fff; 
+}
+/*官网块*/
+.gw_show{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_guanwang.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	position: relative;
+}
+.gw_hide{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_guanwangg.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	background-color: #118912;
+	color: #fff;
+	position: relative; 
+}
+.gw_show:hover{
+	background-image: url(../images/bt_guanwangg.png);
+}
+
+.nav_gw li:hover{
+	background-color: #118912;
+	color: #fff; 
+}
+/*问卷块*/
+.wj_show{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_wenjuan.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	position: relative;
+}
+.wj_hide{
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	padding-left: 36px;
+	cursor: pointer;
+	font-size: 16px;
+	background-image: url(../images/bt_wenjuann.png);
+	background-repeat: no-repeat;
+	background-position: 10px center;
+	background-color: #118912;
+	color: #fff;
+	position: relative; 
+}
+.wj_show:hover{
+	background-image: url(../images/bt_wenjuann.png);
+}
+
+.nav_wj li:hover{
+	background-color: #118912;
+	color: #fff; 
+}
+
+/*右边模块*/
+.ht_right{
+	float: left;
+	width: 85%;
+	height: 100%;
+}
+/*右边顶部*/
+.right_top{
+	width: 100%;
+	height: 10%;
+	background-image: url(../images/ht_logozi.png);
+	background-repeat: no-repeat;
+	background-position: 30px center;
+	background-size: auto 100%;
+	box-shadow: 2px 2px 2px #ccc;
+	position: relative;
+}
+.top_zt{
+	position: absolute;
+	right: 10px;
+	top: 50%;
+	margin-top: -20px;
+	height: 40px;
+	width: 40px;
+	background: url(../images/top_zt.png) no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+.top_zt_k{
+	display: none;
+	position: absolute;
+	right: 9px;
+	top: 40px;
+	width: 120px;
+	text-align: center;
+	z-index: 99;
+}
+.top_zt_k li{
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	background-color: #e5e5e5;
+}
+.top_zt_k div{
+	height: 10px;
+	background: url(../images/top_k_bg.png) no-repeat;
+	background-position: 94px bottom;
+}
+.top_zt_k h1{
+	height: 6px;
+	background-color: #e5e5e5;
+}
+.top_zt_k li:hover{
+	background-color: #118912;
+	color: #fff;
+}
+.top_zt:hover{
+	background: url(../images/top_ztt.png) no-repeat;
+	background-position: center;
+}
+.top_zt:hover .top_zt_k{
+	display: block;
+}
+
+.top_js{
+	position: absolute;
+	right: 60px;
+	top: 50%;
+	margin-top: -20px;
+	height: 40px;
+	width: 100px;
+	font-size: 14px;
+	line-height: 40px;
+	padding-left: 24px;
+	background: url(../images/mid_js.png) no-repeat;
+	background-position: left center;
+	background-size: auto 16px;
+}
+.top_yh{
+	position: absolute;
+	right: 200px;
+	top: 50%;
+	margin-top: -20px;
+	height: 40px;
+	width: 60px;
+	font-size: 14px;
+	line-height: 40px;
+	padding-left: 24px;
+	background: url(../images/mid_yh.png) no-repeat;
+	background-position: left center;
+	background-size: auto 14px;
+}
+
+/*右边活动栏*/
+.right_mid{
+	height: 10%;
+	position: relative;
+}
+.right_mid ul{
+	overflow: hidden;
+	position: absolute;
+	height: 40px;
+	left: 0;
+	top: 50%;
+	margin-top: -20px;
+}
+.mid_li{
+	margin-left: 20px;
+	height: 40px;
+	background-color: #e5e5e5;
+	border-radius: 10px;
+	float: left;
+	line-height: 40px;
+	padding: 0 20px 0 50px;
+}
+.mid_li:hover{
+	background-color: #b9dd83;
+}
+.mid_li1{
+	background-image: url(../images/mid_yonghu.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	background-size: auto 16px;
+}
+.mid_li2{
+	background-image: url(../images/mid_xinwen.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	background-size: auto 16px;
+}
+.mid_li3{
+	background-image: url(../images/mid_gonggao.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	background-size: auto 16px;
+}
+.mid_li4{
+	background-image: url(../images/mid_guanggao.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	background-size: auto 16px;
+}
+.mid_li5{
+	background-image: url(../images/mid_wenjuan.png);
+	background-repeat: no-repeat;
+	background-position: 20px center;
+	background-size: auto 16px;
+}
+
+/*路径区域*/
+.right_lu{
+	height: 8%;
+	overflow: hidden;
+	position: relative;
+	background-color: #f2f2f2;
+}
+#the_header{
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -20px;
+	height: 40px;
+	overflow: hidden;
+}
+#the_header a{
+	display: block;
+	height: 24px;
+	margin-top: 8px;
+	line-height: 24px;
+	font-size: 14px;
+	float: left;
+}
+.the_header_sy{
+	background: url(../images/bt_shouyel.png) no-repeat;
+	background-size: auto 16px;
+	background-position: 20px center;
+	padding: 0 20px 0 45px;
+	margin-left: 6px;
+}
+.the_header_sy:hover{
+	color: #118912;
+}
+.the_header_lj{
+	background: url(../images/nav_show.png) no-repeat;
+	background-size: auto 8px;
+	background-position: 10px center;
+	padding: 0 0 0 30px;
+}
+
+/*子页内容区*/
+.right_content{
+	height: 72%;
+	background-color: #f2f2f2;
+}
+
+
+/*底部*/
+.footer{
+	font-size: 12px;
+	color: #999;
+	text-align: center;
+	line-height: 16px;
+	color: #e5e5e5;
+	height: 16px;
+	width: 100%;
+	background-color: #333;
+	position: fixed;
+	left: 0;
+	bottom: 0;
+}
